@@ -1,0 +1,3 @@
+1. To add new page, we should define the name like "example.page.tmpl"
+2. We can also use ".html" instead of ".tmpl"
+3. Emmet workign on ".html" extension
