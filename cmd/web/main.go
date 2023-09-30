@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/devj1003/mygoapp/pkg/config"
-	"github.com/devj1003/mygoapp/pkg/handlers"
-	"github.com/devj1003/mygoapp/pkg/render"
+	"github.com/devj1003/bookings/pkg/config"
+	"github.com/devj1003/bookings/pkg/handlers"
+	"github.com/devj1003/bookings/pkg/render"
 )
 
 // Port number function
-const portNumber = ":8081"
+const portNumber = ":8080"
 
 var app config.AppConfig
 var session *scs.SessionManager

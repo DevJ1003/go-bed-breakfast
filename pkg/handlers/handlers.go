@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/devj1003/mygoapp/pkg/config"
-	"github.com/devj1003/mygoapp/pkg/models"
-	"github.com/devj1003/mygoapp/pkg/render"
+	"github.com/devj1003/bookings/pkg/config"
+	"github.com/devj1003/bookings/pkg/models"
+	"github.com/devj1003/bookings/pkg/render"
 )
 
 // Repo the repository used for the handlers
