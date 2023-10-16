@@ -1,0 +1,45 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container">
+    <div id="liveAlertPlaceholder"></div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+
+            <!-- div for the alert message -->
+            <h1 class="mt-5">Search For Availability!</h1>
+
+            <form action="" method="GET" class="needs-validation" novalidate>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3 form-group">
+                            <label for="start_date">Arrival</label>
+                            <input required type="date" class="form-control" id="start_date" name="start_date"
+                                aria-describedby="startDateHelp">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3 form-group">
+                            <label for="end_date">Departure</label>
+                            <input required type="date" class="form-control" id="end_date" name="end_date"
+                                aria-describedby="endDateHelp">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Check Availability!</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+<!-- {{define "js"}}
+<script>
+    const elem = document.getElementById('reservation-dates');
+    const rangePicker = new DateRangePicker(elem, {
+        format: "yyyy-mm-dd"
+    })
+</script>
+{{end}} -->
