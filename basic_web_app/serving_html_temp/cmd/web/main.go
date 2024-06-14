@@ -12,20 +12,20 @@ import (
 
 const portNumber = ":8080"
 
-var app config.AppConfig
+var App config.AppConfig
 var session *scs.SessionManager
 
 func main() {
 
-	app.UseCache = false
+	App.UseCache = false
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = app.InProduction
+	session.Cookie.Secure = App.InProduction
 
-	app.Session = session
+	App.Session = session
 
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
@@ -35,7 +35,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    portNumber,
-		Handler: routes(&app),
+		Handler: routes(&App),
 	}
 
 	srv.ListenAndServe()

@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func routes(app *config.AppConfig) http.Handler {
+func routes(App *config.AppConfig) http.Handler {
 	// mux := pat.New()
 
 	// mux.Get("/", http.HandlerFunc(handlers.Home))

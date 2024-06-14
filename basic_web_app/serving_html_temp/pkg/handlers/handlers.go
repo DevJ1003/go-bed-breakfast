@@ -8,17 +8,26 @@ import (
 
 // HOME page handler
 func Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.tmpl")
 
-	remoteIP := r.RemoteAddr
-	app.Session.Put(r.Context(), "remote_ip", remoteIP)
+	// // var App *config.AppConfig
+
+	// var Session *scs.SessionManager
+
+	// // App.Session = session
+
+	// remoteIP := r.RemoteAddr
+	// Session.Put(r.Context(), "remote_ip", remoteIP)
+
+	render.RenderTemplate(w, "home.page.tmpl")
 
 }
 
 // ABOUT page handler
 func About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.tmpl")
 
-	remoteIP := app.Session.GetString(r.Context(), "remote_ip")
-	StringMap["remote_ip"] = remoteIP
+	// remoteIP := session.GetString(r.Context(), "remote_ip")
+	// var Tdata models.TemplateData
+	// Tdata.StringMap["remote_ip"] = remoteIP
+
+	render.RenderTemplate(w, "about.page.tmpl")
 }
