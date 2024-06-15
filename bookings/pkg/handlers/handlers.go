@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/devj1003/go-course/pkg/render"
+	"github.com/devj1003/bookings/pkg/render"
 )
 
 // HOME page handler
