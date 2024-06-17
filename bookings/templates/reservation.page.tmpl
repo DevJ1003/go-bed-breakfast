@@ -1,0 +1,63 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+    <!-- FORM STARTS HERE-->
+    <div class="container" style="margin-top: 100px; margin-bottom: 50px;">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-12">
+                <h1>Make reservation!</h1>
+                <form action="" method="post" class="needs-validation" novalidate>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col" style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- FORM ENDS -->
+
+{{end}}
+
+{{block "js" .}}
+    <script>
+
+        document.getElementById("submitbutton").addEventListener("click", function () {
+            notify("This is my message", "success")
+        })
+
+        function notify(msg, msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
+
+        }
+    </script>
+{{end}}
