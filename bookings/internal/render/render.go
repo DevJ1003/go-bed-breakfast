@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/devj1003/bookings/pkg/models"
+	"github.com/devj1003/bookings/internal/models"
 	"github.com/justinas/nosurf"
 )
 

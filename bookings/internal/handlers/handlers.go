@@ -6,8 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/devj1003/bookings/pkg/models"
-	"github.com/devj1003/bookings/pkg/render"
+	"github.com/devj1003/bookings/internal/forms"
+	"github.com/devj1003/bookings/internal/models"
+	"github.com/devj1003/bookings/internal/render"
 )
 
 // HOME page handler
@@ -79,6 +80,13 @@ func AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 }
 
 func Reservation(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, r, "reservation.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+func PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	render.RenderTemplate(w, r, "reservation.page.tmpl", &models.TemplateData{})
 }

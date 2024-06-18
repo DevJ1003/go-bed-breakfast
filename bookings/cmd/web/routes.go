@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/devj1003/bookings/pkg/config"
-	"github.com/devj1003/bookings/pkg/handlers"
+	"github.com/devj1003/bookings/internal/config"
+	"github.com/devj1003/bookings/internal/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -29,9 +29,11 @@ func routes(App *config.AppConfig) http.Handler {
 
 	mux.Get("/search-availability", handlers.Availability)
 	mux.Post("/search-availability", handlers.PostAvailability)
-	mux.Get("/search-availability-json", handlers.AvailabilityJSON)
+	mux.Post("/search-availability-json", handlers.AvailabilityJSON)
 
 	mux.Get("/reservation", handlers.Reservation)
+	mux.Post("/reservation", handlers.PostReservation)
+
 	mux.Get("/contact", handlers.Contact)
 
 	fileServer := http.FileServer(http.Dir("../../static/"))
