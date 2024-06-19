@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"net/http"
 	"time"
@@ -8,6 +9,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/devj1003/bookings/internal/config"
 	"github.com/devj1003/bookings/internal/handlers"
+	"github.com/devj1003/bookings/internal/models"
 )
 
 const portNumber = ":8080"
@@ -26,6 +28,9 @@ func main() {
 	session.Cookie.Secure = App.InProduction
 
 	App.Session = session
+
+	// what am i going to put in the session
+	gob.Register(models.Reservation{})
 
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)

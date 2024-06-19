@@ -6,10 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/alexedwards/scs/v2"
+	"github.com/devj1003/bookings/internal/config"
 	"github.com/devj1003/bookings/internal/forms"
 	"github.com/devj1003/bookings/internal/models"
 	"github.com/devj1003/bookings/internal/render"
 )
+
+var App config.AppConfig
+var session *scs.SessionManager
 
 // HOME page handler
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +86,10 @@ func AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 
 func Reservation(w http.ResponseWriter, r *http.Request) {
 
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
+
 	render.RenderTemplate(w, r, "reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})
@@ -88,8 +97,60 @@ func Reservation(w http.ResponseWriter, r *http.Request) {
 
 func PostReservation(w http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(w, r, "reservation.page.tmpl", &models.TemplateData{})
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	// Rules for form validation
+	// form.Has("first_name", r)
+	form.Required("first_name", "last_name", "email")
+	form.MinLength("first_name", 3, r)
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, r, "reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+
+	}
+
+	// App.Session = session
+	// session.Put(r.Context(), "reservation", reservation)
+	// // http.Redirect wants ResponseWriter, Request
+	// http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
+
+// NOT WORKING
+// func ReservationSummary(w http.ResponseWriter, r *http.Request) {
+
+// 	// reservation, ok := App.Session.Get(r.Context(), "reservation").(models.Reservation)
+// 	// if !ok {
+// 	// 	log.Println("cannot get item from session")
+// 	// 	return
+// 	// }
+
+// 	// data := make(map[string]interface{})
+// 	// data["reservation"] = reservation
+
+// 	render.RenderTemplate(w, r, "reservation-summary.page.tmpl", &models.TemplateData{})
+// 	// 	Data: data,
+// 	// })
+// }
 
 func Contact(w http.ResponseWriter, r *http.Request) {
 
