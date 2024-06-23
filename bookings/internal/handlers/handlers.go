@@ -9,6 +9,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/devj1003/bookings/internal/config"
 	"github.com/devj1003/bookings/internal/forms"
+	"github.com/devj1003/bookings/internal/helpers"
 	"github.com/devj1003/bookings/internal/models"
 	"github.com/devj1003/bookings/internal/render"
 )
@@ -99,7 +100,8 @@ func PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		log.Println(err)
+		// log.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 
