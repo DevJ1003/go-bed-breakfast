@@ -11,7 +11,7 @@
 
                 {{$res := index .Data "reservation"}}
 
-                <form action="/reservation " method="post" class="" novalidate>
+                <form action="/reservation" method="post" novalidate>
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <div class="col">
@@ -35,6 +35,22 @@
                                     id="last_name" name="last_name" autocomplete="off" value="{{$res.LastName}}" required>
                             </div>
                         </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="start_date">Start Date</label>
+                                <input type="text" name="start_date" id="start_date" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="end_date">End Date</label>
+                                <input type="text" name="end_date" id="end_date" class="form-control">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="room_id" value="1">
 
                         <div class="col">
                             <div class="form-group">

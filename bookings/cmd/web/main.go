@@ -10,8 +10,11 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/devj1003/bookings/internal/config"
+	"github.com/devj1003/bookings/internal/drivers"
 	"github.com/devj1003/bookings/internal/handlers"
+	"github.com/devj1003/bookings/internal/helpers"
 	"github.com/devj1003/bookings/internal/models"
+	"github.com/devj1003/bookings/internal/render"
 )
 
 const portNumber = ":8080"
@@ -23,10 +26,12 @@ var errorLog *log.Logger
 
 func main() {
 
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer db.SQL.Close()
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 	// _ = http.ListenAndServe(portNumber, nil)
@@ -39,17 +44,23 @@ func main() {
 	srv.ListenAndServe()
 }
 
-func run() error {
+func run() (*drivers.DB, error) {
 
 	App.UseCache = false
 
-	// for improving error handling
+	// what am i going to put in session
+	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
+
+	// for improving error handling ===============================================
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	App.InfoLog = infoLog
 
 	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	App.ErrorLog = errorLog
-	//
+	// ==============================================================================
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
@@ -59,11 +70,23 @@ func run() error {
 
 	App.Session = session
 
-	// what am i going to put in the session
-	gob.Register(models.Reservation{})
+	// connect to database ============================================================
+	fmt.Println("Connection to database...")
+	db, err := drivers.ConnectSQL("root:password@tcp(127.0.0.1:3306)/bookings")
+	if err != nil {
+		log.Fatal("Cannot connect to the database, Dying...!")
+	}
+	fmt.Println("Connected to database!")
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	// defer db.SQL.Close()
+	// ==================================================================================
 
-	return nil
+	// http.HandleFunc("/", handlers.Home)
+	// http.HandleFunc("/about", handlers.About)
+	repo := handlers.NewRepo(&App, db)
+	handlers.NewHandlers(repo)
+	render.NewRenderer(&App)
+	helpers.NewHelpers(&App)
+
+	return db, nil
 }

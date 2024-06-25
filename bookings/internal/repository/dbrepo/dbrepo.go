@@ -8,14 +8,14 @@ import (
 )
 
 // holds two things: app and database connection pool
-type mysqlDBRepo struct {
+type MysqlDBRepo struct {
 	App *config.AppConfig
 	DB  *sql.DB
 }
 
 func NewMysqlRepo(conn *sql.DB, a *config.AppConfig) repository.DatabaseRepo {
 
-	return &mysqlDBRepo{
+	return &MysqlDBRepo{
 		App: a,
 		DB:  conn,
 	}
