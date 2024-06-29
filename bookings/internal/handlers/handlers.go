@@ -164,27 +164,25 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("repo:", Repo)
 	// fmt.Println("m:", m)
 
-	err = Repo.DB.InsertReservation(reservation)
+	newReservationID, err := Repo.DB.InsertReservation(reservation)
 	if err != nil {
 		App.Session.Put(r.Context(), "error", "can't insert room restriction!")
 		helpers.ServerError(w, err)
 	}
 
-	// fmt.Println(newReservationID)
+	restriction := models.RoomRestriction{
+		StartDate:     startDate,
+		EndDate:       endDate,
+		RoomID:        roomID,
+		ReservationID: newReservationID,
+		RestrictionID: 1,
+	}
 
-	// restriction := models.RoomRestriction{
-	// 	StartDate:     startDate,
-	// 	EndDate:       endDate,
-	// 	RoomID:        roomID,
-	// 	ReservationID: newReservationID,
-	// 	RestrictionID: 1,
-	// }
-
-	// err = Repo.DB.InsertRoomRestriction(restriction)
-	// if err != nil {
-	// 	App.Session.Put(r.Context(), "error", "can't insert room restriction!")
-	// 	helpers.ServerError(w, err)
-	// }
+	err = Repo.DB.InsertRoomRestriction(restriction)
+	if err != nil {
+		App.Session.Put(r.Context(), "error", "can't insert room restriction!")
+		helpers.ServerError(w, err)
+	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 
