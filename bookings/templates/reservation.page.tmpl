@@ -82,20 +82,3 @@
     <!-- FORM ENDS -->
 
 {{end}}
-
-{{block "js" .}}
-    <script>
-
-        document.getElementById("submitbutton").addEventListener("click", function () {
-            notify("This is my message", "success")
-        })
-
-        function notify(msg, msgType) {
-            notie.alert({
-                type: msgType,
-                text: msg,
-            })
-
-        }
-    </script>
-{{end}}

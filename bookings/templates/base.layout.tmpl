@@ -126,6 +126,21 @@
 
     <!-- SCRIPT ENDS -->
 
+{{block "js" .}}
+
+{{end}}
+
+    <script>
+                
+        function notify(msg, msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
+
+        }
+    </script>
+
 </body>
 
 </html>
