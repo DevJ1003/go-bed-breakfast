@@ -11,7 +11,7 @@
 
                 {{$res := index .Data "reservation"}}
 
-                <form action="/reservation" method="post" novalidate>
+                <form action="/reservation" method="post">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <div class="col">
