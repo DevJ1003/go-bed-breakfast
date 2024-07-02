@@ -131,6 +131,10 @@
 {{end}}
 
     <script>
+
+    document.getElementById("submitbutton").addEventListener("click", function () {
+        notify("This is my message", "warning");
+    })
                 
         function notify(msg, msgType) {
             notie.alert({
