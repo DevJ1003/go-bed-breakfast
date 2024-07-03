@@ -67,7 +67,16 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
 
-	render.Template(w, r, "search-availability.page.tmpl", &models.TemplateData{})
+	// Repo.App.Session.Put(r.Context(), "error", "No Availability")
+	fmt.Println("test", Repo.App.Session.Get(r.Context(), "error"))
+	var errorStatus bool
+	if Repo.App.Session.Get(r.Context(), "error") != nil {
+		errorStatus = true
+	}
+
+	render.Template(w, r, "search-availability.page.tmpl", &models.TemplateData{
+		ShowError: errorStatus,
+	})
 }
 
 func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
@@ -93,7 +102,7 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 		// no availability
 		Repo.App.Session.Put(r.Context(), "error", "No Availability")
 		http.Redirect(w, r, "/search-availability", http.StatusSeeOther)
-		return
+		// return
 	}
 
 	w.Write([]byte(fmt.Sprintf("Start date is %s and end date is %s", start, end)))
