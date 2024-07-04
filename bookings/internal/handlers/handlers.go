@@ -67,15 +67,20 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
 
-	// Repo.App.Session.Put(r.Context(), "error", "No Availability")
-	fmt.Println("test", Repo.App.Session.Get(r.Context(), "error"))
+	fmt.Println(Repo.App.Session.Get(r.Context(), "error"))
 	var errorStatus bool
+	var msgType string
+	var msgText string
 	if Repo.App.Session.Get(r.Context(), "error") != nil {
 		errorStatus = true
+		msgType = "warning"
+		msgText = "No availability"
 	}
 
 	render.Template(w, r, "search-availability.page.tmpl", &models.TemplateData{
-		ShowError: errorStatus,
+		ShowError:   errorStatus,
+		MessageType: msgType,
+		MessageText: msgText,
 	})
 }
 

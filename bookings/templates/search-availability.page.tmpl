@@ -4,6 +4,10 @@
 
 
 <input type="hidden" id="show_error_msg" value="{{.ShowError}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageType}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageText}}">
+
+
 
 
 <!-- FORM STARTS HERE-->
@@ -31,7 +35,7 @@
                                     </div>
                                 </div>
                             </div>
-                        <button type="submit" id="submitButton" class="btn btn-primary" onclick="Notify()">Submit</button>
+                        <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>

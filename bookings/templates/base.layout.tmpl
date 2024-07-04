@@ -12,7 +12,7 @@
     <style>
    
     .notie-container {
-      margin-top: 80px;
+      margin-top: 55px;
     }
   </style>
 
@@ -135,17 +135,11 @@
 
 {{block "js" .}}
 <script>
-    
-    
     window.onload = function(e){ 
-        
-        if (document.getElementById("show_error_msg").value == "true"){
-            
-            notify("This is my message", "warning");
+            if (document.getElementById("show_error_msg").value == "true"){
+                notify("{{.MessageText}}", "{{.MessageType}}");
         } 
     }
-
-
 
     function notify(msg, msgType) {
         notie.alert({
