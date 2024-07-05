@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -20,7 +19,7 @@ import (
 )
 
 var App config.AppConfig
-var session *scs.SessionManager
+var Session *scs.SessionManager
 var Repo *Repository
 
 // Repository is the repository type
@@ -67,14 +66,13 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println(Repo.App.Session.Get(r.Context(), "error"))
 	var errorStatus bool
 	var msgType string
 	var msgText string
 	if Repo.App.Session.Get(r.Context(), "error") != nil {
 		errorStatus = true
 		msgType = "warning"
-		msgText = "No availability"
+		msgText = "No Availability!"
 	}
 
 	render.Template(w, r, "search-availability.page.tmpl", &models.TemplateData{
@@ -101,6 +99,7 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 	rooms, err := Repo.DB.SearchAvailabilityForAllRooms(startDate, endDate)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
 	}
 
 	if len(rooms) == 0 {
@@ -110,7 +109,20 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 		// return
 	}
 
-	w.Write([]byte(fmt.Sprintf("Start date is %s and end date is %s", start, end)))
+	data := make(map[string]interface{})
+	data["rooms"] = rooms
+
+	res := models.Reservation{
+		StartDate: startDate,
+		EndDate:   endDate,
+	}
+
+	Repo.App.Session.Put(r.Context(), "reservation", res)
+
+	// w.Write([]byte(fmt.Sprintf("Start date is %s and end date is %s", start, end)))
+	render.Template(w, r, "choose-room.page.tmpl", &models.TemplateData{
+		Data: data,
+	})
 }
 
 type jsonResponse struct {
@@ -168,6 +180,9 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
 
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
