@@ -7,12 +7,21 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-12">
+            {{$res := index .Data "reservation"}}
                 <h1>Make reservation!</h1>
-
-                {{$res := index .Data "reservation"}}
+                <p>
+                    <strong>Reservation Details:</strong><br>
+                    Room: {{$res.Room.RoomName}}<br>
+                    Arrival: {{index .StringMap "start_date"}}<br>
+                    Departure: {{index .StringMap "end_date"}}
+                </p>
+                
 
                 <form action="/reservation" method="post">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <input type="hidden" name="start_date" value="{{index .StringMap "start_date"}}">
+                <input type="hidden" name="end_date" value="{{index .StringMap "end_date"}}">
+                <input type="hidden" name="room_id" value="{{$res.RoomID}}">
 
                         <div class="col">
                             <div class="form-group">
@@ -35,23 +44,6 @@
                                     id="last_name" name="last_name" autocomplete="off" value="{{$res.LastName}}" required>
                             </div>
                         </div>
-
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="start_date">Start Date</label>
-                                <input type="text" name="start_date" id="start_date" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="end_date">End Date</label>
-                                <input type="text" name="end_date" id="end_date" class="form-control">
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="room_id" value="1">
-
                         <div class="col">
                             <div class="form-group">
                                 <label for="email" class="form-label">Email</label>

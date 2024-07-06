@@ -132,3 +132,24 @@ func (m *MysqlDBRepo) SearchAvailabilityForAllRooms(start, end time.Time) ([]mod
 
 	return rooms, nil
 }
+
+// GetRoomByID gets a room by it's ID and returns room name
+func (m *MysqlDBRepo) GetRoomByID(roomID int) (string, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var roomname string
+
+	query := `SELECT room_name FROM rooms WHERE id = ?`
+
+	row := m.DB.QueryRowContext(ctx, query, roomID)
+	err := row.Scan(&roomname)
+
+	if err != nil {
+		return roomname, err
+	}
+
+	return roomname, err
+
+}

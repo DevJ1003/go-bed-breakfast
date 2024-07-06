@@ -2,35 +2,53 @@
 
 {{define "content"}}
     {{$res := index .Data "reservation"}}
-    <div class="container">
+    <div class="container" style="margin-top: 100px; margin-bottom: 76px;">
         <div class="row">
+        <h1 class="mt-5">Reservation Summary</h1>
+        <hr>
             <div class="col">
-                <h1 class="mt-5">Reservation Summary</h1>
-                <hr>
                 <table>
                     <tbody>
                         <tr>
                             <td>Name:</td>
-                            <td>{{$res.FirstName}} {{$res.LastName}}</td>
                         </tr>
                         <tr>
                             <td>Arrival:</td>
-                            <td></td>
                         </tr>
                         <tr>
                             <td>Departure:</td>
-                            <td></td>
                         </tr>
                         <tr>
                             <td>Email:</td>
-                            <td></td>
                         </tr>
                         <tr>
                             <td>Phone:</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>{{$res.FirstName}} {{$res.LastName}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{index .StringMap "start_date"}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{index .StringMap "end_date"}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{$res.Email}}</td>
+                        </tr>
+                        <tr>
                             <td>{{$res.Phone}}</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="col">
             </div>
         </div>
     </div>
