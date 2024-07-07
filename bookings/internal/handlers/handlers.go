@@ -280,11 +280,6 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, err)
 	}
 
-	// res := models.Reservation{
-	// 	StartDate: startDate,
-	// 	EndDate:   endDate,
-	// }
-
 	Repo.App.Session.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 
@@ -300,6 +295,12 @@ func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	roomname, err := Repo.DB.GetRoomByID(reservation.RoomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	Repo.App.Session.Remove(r.Context(), "reservation")
 
 	sd := reservation.StartDate.Format("2006-01-02")
@@ -307,6 +308,7 @@ func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 	stringMap := make(map[string]string)
 	stringMap["start_date"] = sd
 	stringMap["end_date"] = ed
+	stringMap["roomname"] = roomname
 
 	data := make(map[string]interface{})
 	data["reservation"] = reservation
