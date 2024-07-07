@@ -32,6 +32,9 @@ func main() {
 	}
 
 	defer db.SQL.Close()
+	defer close(App.MailChain)
+	fmt.Println("Starting mail listner...  ")
+	listenForMail()
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 	// _ = http.ListenAndServe(portNumber, nil)
@@ -53,6 +56,9 @@ func run() (*drivers.DB, error) {
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
+
+	mailChan := make(chan models.MailData)
+	App.MailChain = mailChan
 
 	// for improving error handling ===============================================
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
