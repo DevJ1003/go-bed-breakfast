@@ -38,5 +38,23 @@
         </div>
     </section>
     <!-- FORM ENDS -->
+
+{{block "js" .}}
+<script>
+    window.onload = function(e){ 
+            if (document.getElementById("show_error_msg").value == "true"){
+                notify("{{.MessageText}}", "{{.MessageType}}");
+        } 
+    }
+
+    function notify(msg, msgType) {
+        notie.alert({
+            type: msgType,
+            text: msg,
+        })
+    }
+    
+</script>
+{{end}}
     
 {{end}}

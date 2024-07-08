@@ -2,6 +2,9 @@
 
 {{define "content"}}
 
+<input type="hidden" id="show_error_msg" value="{{.ShowError}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageType}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageText}}">
 
     <!-- CAROUSEL STARTS HERE-->
     <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -164,5 +167,22 @@
     </section>
     <!-- TESTIMONIAL ENDS -->
 
+{{block "js" .}}
+<script>
+    window.onload = function(e){ 
+            if (document.getElementById("show_error_msg").value == "true"){
+                notify("{{.MessageText}}", "{{.MessageType}}");
+        } 
+    }
+
+    function notify(msg, msgType) {
+        notie.alert({
+            type: msgType,
+            text: msg,
+        })
+    }
+    
+</script>
+{{end}}
 
 {{end}}

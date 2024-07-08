@@ -47,7 +47,20 @@ func NewHandlers(r *Repository) {
 // HOME page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 
-	render.Template(w, r, "home.page.tmpl", &models.TemplateData{})
+	var errorStatus bool
+	var msgType string
+	var msgText string
+	if Repo.App.Session.Get(r.Context(), "error_for_login") != nil {
+		errorStatus = true
+		msgType = "success"
+		msgText = "Logged-in Successfully!"
+	}
+
+	render.Template(w, r, "home.page.tmpl", &models.TemplateData{
+		ShowError:   errorStatus,
+		MessageType: msgType,
+		MessageText: msgText,
+	})
 
 }
 
@@ -357,4 +370,75 @@ func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
 
 	render.Template(w, r, "contact.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) ShowLogin(w http.ResponseWriter, r *http.Request) {
+
+	var errorStatus bool
+	var msgType string
+	var msgText string
+	if Repo.App.Session.Get(r.Context(), "error_for_login") != nil {
+		errorStatus = true
+		msgType = "warning"
+		msgText = "Invalid Credentials!"
+	}
+
+	render.Template(w, r, "login-page.tmpl", &models.TemplateData{
+		Form:        forms.New(nil),
+		ShowError:   errorStatus,
+		MessageType: msgType,
+		MessageText: msgText,
+	})
+
+}
+
+// PostShowLogin handles logging the user in
+func (m *Repository) PostShowLogin(w http.ResponseWriter, r *http.Request) {
+
+	_ = Repo.App.Session.RenewToken(r.Context())
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+	}
+
+	email := r.Form.Get("email")
+	password := r.Form.Get("password")
+
+	form := forms.New(r.PostForm)
+	form.Required("email", "password")
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		render.Template(w, r, "login.page.tmpl", &models.TemplateData{
+			Form: form,
+		})
+		return
+	}
+
+	id, _, err := Repo.DB.Authenticate(email, password)
+	if err != nil {
+		log.Println(err)
+
+		Repo.App.Session.Put(r.Context(), "error_for_login", "Invalid login credentials")
+		http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+		return
+	}
+
+	Repo.App.Session.Put(r.Context(), "user_id", id)
+	Repo.App.Session.Put(r.Context(), "flash", "Logged in successfully!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// Logout logs user out
+func (m *Repository) Logout(w http.ResponseWriter, r *http.Request) {
+
+	_ = Repo.App.Session.Destroy(r.Context())
+	_ = Repo.App.Session.RenewToken(r.Context())
+
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+}
+
+func (m *Repository) AdminDashboard(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, r, "admin-dashboard.page.tmple", &models.TemplateData{})
 }

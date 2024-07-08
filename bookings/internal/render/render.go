@@ -10,15 +10,21 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-var app *config.AppConfig
+var App *config.AppConfig
 
 // NewRenderer sets the config for the template package
 func NewRenderer(a *config.AppConfig) {
-	app = a
+	App = a
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.Flash = App.Session.PopString(r.Context(), "flash")
+	td.Error = App.Session.PopString(r.Context(), "error")
+	td.Warning = App.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
+	if App.Session.Exists(r.Context(), "user_id") {
+		td.IsAuthenticated = 1
+	}
 	return td
 }
 

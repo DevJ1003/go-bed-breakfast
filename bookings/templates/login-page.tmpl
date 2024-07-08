@@ -1,0 +1,63 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<input type="hidden" id="show_error_msg" value="{{.ShowError}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageType}}">
+<input type="hidden" id="show_error_msg" value="{{.MessageText}}">
+
+ <!-- INTRODUCTORY IMAGE HERE-->
+    <div class="container" style="margin-bottom:36px;">
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col">
+            <h1 style="padding-top:100px; padding-bottom:10px;">Login</h1>
+            <hr>
+            <form method="post" action="/user/login" novalidate>
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    {{with .Form.Errors.Get "email"}}
+                        <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="email" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" 
+                        id="email" name="email" autocomplete="off" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    {{with .Form.Errors.Get "password"}}
+                        <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input type="password" class="form-control {{with .Form.Errors.Get "password"}} is-invalid {{end}}" 
+                        id="password" name="password" autocomplete="off" value="" required>
+                </div>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+
+{{block "js" .}}
+<script>
+    window.onload = function(e){ 
+            if (document.getElementById("show_error_msg").value == "true"){
+                notify("{{.MessageText}}", "{{.MessageType}}");
+        } 
+    }
+
+    function notify(msg, msgType) {
+        notie.alert({
+            type: msgType,
+            text: msg,
+        })
+    }
+    
+</script>
+{{end}}
+    
+{{end}}
