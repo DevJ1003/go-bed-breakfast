@@ -42,3 +42,18 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 	}
 
 }
+
+// RENDERING the html templates using html/template
+func AdminTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+	parsedTemplate, _ := template.ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
+
+	td = AddDefaultData(td, r)
+
+	err := parsedTemplate.Execute(w, td)
+
+	if err != nil {
+		fmt.Println("error parsing template:", err)
+		return
+	}
+
+}
