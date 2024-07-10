@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/devj1003/bookings/internal/models"
@@ -231,4 +232,63 @@ func (m *MysqlDBRepo) Authenticate(email, testPassword string) (int, string, err
 	}
 
 	return id, hashedPassword, nil
+}
+
+// AllReservations returns a slice of all reservations
+func (m *MysqlDBRepo) AllReservations() ([]models.Reservation, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	fmt.Println("check1")
+
+	var reservations []models.Reservation
+
+	query := `SELECT r.id, r.first_name, r.last_name, r.email, r.phone, r.start_date,
+				r.end_date, r.room_id, r.created_at, r.Updated_at,
+				rm.id, rm.room_name
+				FROM reservations r
+				LEFT JOIN rooms rm on (r.room_id = rm.id)
+				ORDER BY r.start_date ASC`
+
+	fmt.Println("check2")
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return reservations, err
+	}
+
+	fmt.Println("check3")
+
+	for rows.Next() {
+		var i models.Reservation
+		err := rows.Scan(
+			&i.ID,
+			&i.FirstName,
+			&i.LastName,
+			&i.Email,
+			&i.Phone,
+			&i.StartDate,
+			&i.EndDate,
+			&i.RoomID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Room.ID,
+			&i.Room.RoomName,
+		)
+		fmt.Println("check4")
+
+		if err != nil {
+			return reservations, nil
+		}
+		reservations = append(reservations, i)
+	}
+	fmt.Println("check5")
+
+	if err = rows.Err(); err != nil {
+		return reservations, nil
+	}
+	fmt.Println("check6")
+
+	return reservations, nil
 }
