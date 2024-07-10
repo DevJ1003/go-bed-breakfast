@@ -3,7 +3,6 @@ package dbrepo
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/devj1003/bookings/internal/models"
@@ -240,8 +239,6 @@ func (m *MysqlDBRepo) AllReservations() ([]models.Reservation, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	fmt.Println("check1")
-
 	var reservations []models.Reservation
 
 	query := `SELECT r.id, r.first_name, r.last_name, r.email, r.phone, r.start_date,
@@ -251,14 +248,10 @@ func (m *MysqlDBRepo) AllReservations() ([]models.Reservation, error) {
 				LEFT JOIN rooms rm on (r.room_id = rm.id)
 				ORDER BY r.start_date ASC`
 
-	fmt.Println("check2")
-
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
 		return reservations, err
 	}
-
-	fmt.Println("check3")
 
 	for rows.Next() {
 		var i models.Reservation
@@ -276,19 +269,16 @@ func (m *MysqlDBRepo) AllReservations() ([]models.Reservation, error) {
 			&i.Room.ID,
 			&i.Room.RoomName,
 		)
-		fmt.Println("check4")
 
 		if err != nil {
-			return reservations, nil
+			return reservations, err
 		}
 		reservations = append(reservations, i)
 	}
-	fmt.Println("check5")
 
 	if err = rows.Err(); err != nil {
-		return reservations, nil
+		return reservations, err
 	}
-	fmt.Println("check6")
 
 	return reservations, nil
 }

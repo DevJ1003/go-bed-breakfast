@@ -4,17 +4,27 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"time"
 
 	"github.com/devj1003/bookings/internal/config"
 	"github.com/devj1003/bookings/internal/models"
 	"github.com/justinas/nosurf"
 )
 
+var functions = template.FuncMap{
+	"humanDate": HumanDate,
+}
+
 var App *config.AppConfig
 
 // NewRenderer sets the config for the template package
 func NewRenderer(a *config.AppConfig) {
 	App = a
+}
+
+// HumanDate returns the date in YYYY-MM-DD format
+func HumanDate(t time.Time) string {
+	return t.Format("2006-01-02")
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
