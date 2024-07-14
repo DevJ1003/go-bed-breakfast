@@ -293,7 +293,7 @@ func (m *MysqlDBRepo) NewReservations() ([]models.Reservation, error) {
 	var reservations []models.Reservation
 
 	query := `SELECT r.id, r.first_name, r.last_name, r.email, r.phone, r.start_date,
-				r.end_date, r.room_id, r.created_at, r.Updated_at,
+				r.end_date, r.room_id, r.created_at, r.updated_at,
 				rm.id, rm.room_name
 				FROM reservations r
 				LEFT JOIN rooms rm on (r.room_id = rm.id)
@@ -333,4 +333,42 @@ func (m *MysqlDBRepo) NewReservations() ([]models.Reservation, error) {
 	}
 
 	return reservations, nil
+}
+
+// GetReservationByID returns one reservation by ID
+func (m *MysqlDBRepo) GetReservationByID(id int) (models.Reservation, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var res models.Reservation
+
+	query := `SELECT r.id, r.first_name, r.last_name, r.email, r.phone, r.start_date,
+				r.end_date, r.processed ,r.created_at, r.updated_at,
+				rm.id, rm.room_name
+				FROM reservations r
+				LEFT JOIN rooms rm ON (r.room_id = rm.id)
+				WHERE r.id=?`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+	err := row.Scan(
+		&res.ID,
+		&res.FirstName,
+		&res.LastName,
+		&res.Email,
+		&res.Phone,
+		&res.StartDate,
+		&res.EndDate,
+		&res.Processed,
+		&res.CreatedAt,
+		&res.UpdatedAt,
+		&res.Room.ID,
+		&res.Room.RoomName,
+	)
+
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
 }

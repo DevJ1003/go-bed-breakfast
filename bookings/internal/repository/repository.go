@@ -22,4 +22,5 @@ type DatabaseRepo interface {
 	// admin
 	AllReservations() ([]models.Reservation, error)
 	NewReservations() ([]models.Reservation, error)
+	GetReservationByID(id int) (models.Reservation, error)
 }

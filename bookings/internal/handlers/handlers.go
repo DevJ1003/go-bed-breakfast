@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -474,6 +475,36 @@ func (m *Repository) AdminNewReservations(w http.ResponseWriter, r *http.Request
 
 	render.AdminTemplate(w, r, "admin-new-reservations.page.tmpl", &models.TemplateData{
 		Data: data,
+	})
+}
+
+func (m *Repository) AdminShowReservations(w http.ResponseWriter, r *http.Request) {
+
+	exploded := strings.Split(r.RequestURI, "/")
+	id, err := strconv.Atoi(exploded[4])
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	src := exploded[3]
+	stringMap := make(map[string]string)
+	stringMap["src"] = src
+
+	// get reservations from database
+	res, err := Repo.DB.GetReservationByID(id)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["reservations"] = res
+
+	render.AdminTemplate(w, r, "admin-reservations-show.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+		Data:      data,
+		Form:      forms.New(nil),
 	})
 }
 
