@@ -1,6 +1,7 @@
 {{template "admin" .}}
 
 
+
 {{define "page-title"}}
     Reservation
 {{end}}
@@ -23,7 +24,7 @@
 
 
 
-        <form action="/admin/reservations/{{src}}/{{$res.ID}}" method="post">
+        <form action="/admin/reservations/{{$src}}/{{$res.ID}}" method="post">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <div class="col">
@@ -72,10 +73,6 @@
                     <input type="submit" class="btn btn-primary" value="Save">
                     <a href="/admin/reservations/-{{$src}}" class="btn btn-warning">Cancel</a>
                 </form>
-
-
-
-                
 
 
 
