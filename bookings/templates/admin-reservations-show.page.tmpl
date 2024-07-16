@@ -10,7 +10,17 @@
     {{$src := index .StringMap "src"}}
 
     <div class="col-md-12">
-        <p>Reservation : {{$res.FirstName}} {{$res.LastName}}</p>
+        <p>
+            <strong>Reservation :</strong> {{$res.FirstName}} {{$res.LastName}}<br>
+            <strong>Arrival :</strong> {{$res.StartDate}}<br>
+            <strong>Departure :</strong> {{$res.EndDate}}<br>
+            <strong>RoomName :</strong> {{$res.Room.RoomName}}
+        </p>
+
+
+        
+
+
 
 
         <form action="/admin/reservations/{{src}}/{{$res.ID}}" method="post">
@@ -59,9 +69,13 @@
                             </div>
                         </div>
 
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="submit" class="btn btn-error">Cancel</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                    <a href="/admin/reservations/-{{$src}}" class="btn btn-warning">Cancel</a>
                 </form>
+
+
+
+                
 
 
 
