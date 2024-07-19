@@ -1,3 +1,4 @@
+# Royal Bed & Breakfast
 # Bookings and reservations
 
 This is the repository for my bookings and reservation project.
