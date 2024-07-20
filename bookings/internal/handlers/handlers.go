@@ -547,3 +547,31 @@ func (m *Repository) AdminPostShowReservations(w http.ResponseWriter, r *http.Re
 func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Request) {
 	render.AdminTemplate(w, r, "admin-reservations-calendar.page.tmpl", &models.TemplateData{})
 }
+
+// AdminProcessReservations marks reservation as processed
+func (m *Repository) AdminProcessReservations(w http.ResponseWriter, r *http.Request) {
+
+	// var errorStatus bool
+	// var msgType string
+	// var msgText string
+
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	src := chi.URLParam(r, "src")
+	_ = Repo.DB.UpdateProcessedForReservation(1, id)
+
+	// if Repo.App.Session.Get(r.Context(), "show_success_msg_admin") != nil {
+	// 	errorStatus = true
+	// 	msgType = "success"
+	// 	msgText = "Marked as processed!"
+	// }
+
+	render.AdminTemplate(w, r, fmt.Sprintf("/admin/reservations-%s", src), &models.TemplateData{
+		ShowError:   true,
+		MessageType: "success",
+		MessageText: "waah",
+	})
+
+	Repo.App.Session.Put(r.Context(), "flash", "marked as processed")
+	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
+
+}

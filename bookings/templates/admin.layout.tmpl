@@ -17,6 +17,15 @@
         <link rel="stylesheet" href="/static/admin/css/style.css">
         <!-- endinject -->
         <link rel="shortcut icon" href="/static/admin/images/favicon.png"/>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+        <style>
+            .notie-container {
+            margin-top: 55px;
+            }
+            .place-right {
+                float: right;
+            }
+        </style>
 
         {{block "css" . }}
 
@@ -132,6 +141,7 @@
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="/static/admin/js/dashboard.js"></script>
+    <script src="https://unpkg.com/notie"></script>
     <!-- End custom js for this page-->
 
     {{block "js" . }}

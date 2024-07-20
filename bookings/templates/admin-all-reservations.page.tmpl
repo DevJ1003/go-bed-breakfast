@@ -9,6 +9,12 @@
 {{end}}
 
 {{define "content"}}
+
+
+<input type="hidden" id="show_success_msg_admin" value="{{.ShowError}}">
+<input type="hidden" id="show_success_msg_admin" value="{{.MessageType}}">
+<input type="hidden" id="show_success_msg_admin" value="{{.MessageText}}">
+
     <div class="col-md-12">
         {{$res := index .Data "reservations"}}
 
@@ -47,7 +53,26 @@
     </div>
 {{end}}
 
-{{define "js"}}
+
+
+
+{{block "js" .}}
+<script>
+    window.onload = function(e){ 
+            if (document.getElementById("show_success_msg_admin").value == "true"){
+                notify("{{.MessageText}}", "{{.MessageType}}");
+        } 
+    }
+
+    function notify(msg, msgType) {
+        notie.alert({
+            type: msgType,
+            text: msg,
+        })
+    }
+    
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function (){

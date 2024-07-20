@@ -415,14 +415,14 @@ func (m *MysqlDBRepo) DeleteReservation(id int) error {
 }
 
 // UpdateProcessedForReservation updates processed for a reservation
-func (m *MysqlDBRepo) UpdateProcessedForReservation(id, processed int) error {
+func (m *MysqlDBRepo) UpdateProcessedForReservation(processed, id int) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	query := `UPDATE reservations SET processed=? WHERE id=?`
 
-	_, err := m.DB.ExecContext(ctx, query, id)
+	_, err := m.DB.ExecContext(ctx, query, processed, id)
 	if err != nil {
 		return err
 	}
