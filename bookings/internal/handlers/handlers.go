@@ -545,33 +545,83 @@ func (m *Repository) AdminPostShowReservations(w http.ResponseWriter, r *http.Re
 }
 
 func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Request) {
-	render.AdminTemplate(w, r, "admin-reservations-calendar.page.tmpl", &models.TemplateData{})
+
+	// assume that there is no month/year specified
+	now := time.Now()
+
+	if r.URL.Query().Get("y") != "" {
+		year, _ := strconv.Atoi(r.URL.Query().Get("y"))
+		month, _ := strconv.Atoi(r.URL.Query().Get("m"))
+		now = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+	}
+
+	data := make(map[string]interface{})
+	data["now"] = now
+
+	next := now.AddDate(0, 1, 0)
+	last := now.AddDate(0, -1, 0)
+
+	nextMonth := next.Format("01")
+	nextMonthYear := next.Format("2006")
+
+	lastMonth := last.Format("01")
+	lastMonthYear := last.Format("2006")
+
+	stringMap := make(map[string]string)
+	stringMap["next_month"] = nextMonth
+	stringMap["next_month_year"] = nextMonthYear
+	stringMap["last_month"] = lastMonth
+	stringMap["last_month_year"] = lastMonthYear
+
+	stringMap["this_month"] = now.Format("01")
+	// stringMap["this_month"] = now.Format("January")
+	stringMap["this_month_year"] = now.Format("2006")
+
+	// get the first and last days of the month
+	currentYear, currentMonth, _ := now.Date()
+	currentLocation := now.Location()
+	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	lastOfMonth := firstOfMonth.AddDate(0, -1, 0)
+
+	intMap := make(map[string]int)
+	intMap["days_in_month"] = lastOfMonth.Day()
+
+	rooms, err := Repo.DB.AllRooms()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	data["rooms"] = rooms
+
+	render.AdminTemplate(w, r, "admin-reservations-calendar.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+		Data:      data,
+		IntMap:    intMap,
+	})
+
 }
 
 // AdminProcessReservations marks reservation as processed
 func (m *Repository) AdminProcessReservations(w http.ResponseWriter, r *http.Request) {
 
-	// var errorStatus bool
-	// var msgType string
-	// var msgText string
-
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 	src := chi.URLParam(r, "src")
 	_ = Repo.DB.UpdateProcessedForReservation(1, id)
 
-	// if Repo.App.Session.Get(r.Context(), "show_success_msg_admin") != nil {
-	// 	errorStatus = true
-	// 	msgType = "success"
-	// 	msgText = "Marked as processed!"
-	// }
-
-	render.AdminTemplate(w, r, fmt.Sprintf("/admin/reservations-%s", src), &models.TemplateData{
-		ShowError:   true,
-		MessageType: "success",
-		MessageText: "waah",
-	})
-
 	Repo.App.Session.Put(r.Context(), "flash", "marked as processed")
+	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
+
+}
+
+// AdminProcessReservations marks reservation as processed
+func (m *Repository) AdminDeleteReservations(w http.ResponseWriter, r *http.Request) {
+
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	src := chi.URLParam(r, "src")
+	_ = Repo.DB.DeleteReservation(id)
+
+	Repo.App.Session.Put(r.Context(), "success", "deleted!")
 	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
 
 }

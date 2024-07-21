@@ -11,20 +11,39 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-var functions = template.FuncMap{
-	"humanDate": HumanDate,
-}
+// var functions = template.FuncMap{
+// 	"humanDate":  HumanDate,
+// 	"formatDate": FormatDate,
+// 	"iterate":    Iterate,
+// }
 
 var App *config.AppConfig
 
-// NewRenderer sets the config for the template package
+// // NewRenderer sets the config for the template package
 func NewRenderer(a *config.AppConfig) {
 	App = a
 }
 
-// HumanDate returns the date in YYYY-MM-DD format
+// // HumanDate returns the date in YYYY-MM-DD format
 func HumanDate(t time.Time) string {
 	return t.Format("2006-01-02")
+}
+
+func FormatDate(t time.Time, f string) string {
+	return t.Format(f)
+}
+
+// Iterate returns a slice of ints, starting at 1, going to count
+func Iterate(count int) []int {
+	var i int
+	var items []int
+	for i = 0; i < count; i++ {
+		fmt.Println(i)
+		items = append(items, i)
+	}
+	fmt.Println(items)
+	return items
+
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
@@ -40,7 +59,13 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 
 // RENDERING the html templates using html/template
 func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
-	parsedTemplate, _ := template.ParseFiles("../../templates/"+tmpl, "../../templates/base.layout.tmpl")
+	parsedTemplate, _ := template.New(tmpl).Funcs(template.FuncMap{
+		"humanDate":  HumanDate,
+		"formatDate": FormatDate,
+		"iterate":    Iterate,
+	}).ParseFiles("../../templates/"+tmpl, "../../templates/base.layout.tmpl")
+
+	// template.ParseFiles("../../templates/"+tmpl, "../../templates/base.layout.tmpl")
 
 	td = AddDefaultData(td, r)
 
@@ -55,7 +80,14 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 
 // RENDERING the html templates using html/template
 func AdminTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
-	parsedTemplate, _ := template.ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
+
+	parsedTemplate, _ := template.New(tmpl).Funcs(template.FuncMap{
+		"humanDate":  HumanDate,
+		"formatDate": FormatDate,
+		"iterate":    Iterate,
+	}).ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
+
+	// parsedTemplate, _ := template.ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
 
 	td = AddDefaultData(td, r)
 

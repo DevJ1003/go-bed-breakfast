@@ -70,9 +70,25 @@
                             </div>
                         </div>
 
-                    <input type="submit" class="btn btn-primary" value="Save">
-                    <a href="/admin/reservations-{{$src}}" class="btn btn-warning">Cancel</a>
-                    <a href="/admin/process-reservation/{{$src}}/{{$res.ID}}" class="btn btn-info">Mark as Processed</a>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col">
+                        <p align="left">
+                            <input type="submit" class="btn btn-primary" value="Save">
+                            <a href="/admin/reservations-{{$src}}" class="btn btn-warning">Cancel</a>
+                            <a href="/admin/process-reservation/{{$src}}/{{$res.ID}}" class="btn btn-info">Mark as Processed</a>
+                        </p>
+                        </div>
+                        
+                        <div class="col"></div>
+
+                        <div class="col">
+                        <p align="right">
+                            <a href="/admin/delete-reservation/{{$src}}/{{$res.ID}}" class="btn btn-danger">Delete</a>
+                        </p>
+                        </div>
+                    </div>
                 </form>
 
 
