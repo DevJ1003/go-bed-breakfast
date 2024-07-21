@@ -38,12 +38,14 @@ func Iterate(count int) []int {
 	var i int
 	var items []int
 	for i = 0; i < count; i++ {
-		fmt.Println(i)
 		items = append(items, i)
 	}
-	fmt.Println(items)
-	return items
 
+	return items
+}
+
+func Add(a, b int) int {
+	return a + b
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
@@ -63,6 +65,7 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 		"humanDate":  HumanDate,
 		"formatDate": FormatDate,
 		"iterate":    Iterate,
+		"add":        Add,
 	}).ParseFiles("../../templates/"+tmpl, "../../templates/base.layout.tmpl")
 
 	// template.ParseFiles("../../templates/"+tmpl, "../../templates/base.layout.tmpl")
@@ -85,6 +88,7 @@ func AdminTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mode
 		"humanDate":  HumanDate,
 		"formatDate": FormatDate,
 		"iterate":    Iterate,
+		"add":        Add,
 	}).ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
 
 	// parsedTemplate, _ := template.ParseFiles("../../templates/"+tmpl, "../../templates/admin.layout.tmpl")
