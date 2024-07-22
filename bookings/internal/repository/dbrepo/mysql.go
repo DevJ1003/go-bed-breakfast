@@ -468,3 +468,48 @@ func (m *MysqlDBRepo) AllRooms() ([]models.Room, error) {
 
 	return rooms, nil
 }
+
+// GetRestrictionsForRoomByDate returns restrictions for a room by date range
+func (m *MysqlDBRepo) GetRestrictionsForRoomByDate(roomID int, start, end time.Time) ([]models.RoomRestriction, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var restrictions []models.RoomRestriction
+
+	query := `SELECT COALESCE(reservation_id, 0), restriction_id, room_id, start_date,
+				end_date FROM room_restrictions WHERE ? < end_date AND ? >= start_date
+				AND room_id = ?`
+
+	rows, err := m.DB.QueryContext(ctx, query, start, end, roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		var r models.RoomRestriction
+		err := rows.Scan(
+			&r.ID,
+			&r.ReservationID,
+			&r.RestrictionID,
+			&r.RoomID,
+			&r.StartDate,
+			&r.EndDate,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		restrictions = append(restrictions, r)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return restrictions, nil
+}
