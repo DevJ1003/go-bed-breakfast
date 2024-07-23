@@ -477,7 +477,7 @@ func (m *MysqlDBRepo) GetRestrictionsForRoomByDate(roomID int, start, end time.T
 
 	var restrictions []models.RoomRestriction
 
-	query := `SELECT COALESCE(reservation_id, 0), restriction_id, room_id, start_date,
+	query := `SELECT id, COALESCE(reservation_id, 0), restriction_id, room_id, start_date,
 				end_date FROM room_restrictions WHERE ? < end_date AND ? >= start_date
 				AND room_id = ?`
 

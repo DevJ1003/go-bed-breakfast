@@ -76,7 +76,11 @@
                         <div class="col">
                         <p align="left">
                             <input type="submit" class="btn btn-primary" value="Save">
-                            <a href="/admin/reservations-{{$src}}" class="btn btn-warning">Cancel</a>
+                            {{if eq $src "cal"}}
+                                <a href="#!" onclick="window.history.go(-1)" class="btn btn-warning">Cancel</a>
+                            {{else}}
+                                <a href="/admin/reservations-{{$src}}" class="btn btn-warning">Cancel</a>
+                            {{end}}
                             <a href="/admin/process-reservation/{{$src}}/{{$res.ID}}" class="btn btn-info">Mark as Processed</a>
                         </p>
                         </div>

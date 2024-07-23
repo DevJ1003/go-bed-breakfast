@@ -10,7 +10,7 @@
 {{$rooms := index .Data "rooms"}}
 {{$dim := index .IntMap "days_in_month"}}
 {{$currMonth := index .StringMap "this_month"}}
-{{$currYear := index .StringMap "this_year"}}
+{{$currYear := index .StringMap "this_month_year"}}
 
     <div class="col-md-12">
         
@@ -41,6 +41,8 @@
             </div>
         </div>
         {{range $rooms}}
+        {{$blocks := index $.Data (printf "block_map_%d" .ID)}}
+        {{$reservations := index $.Data (printf "reservation_map_%d" .ID)}}
 
             {{$roomID := .ID}}
             <h4 class="mt-4">{{.RoomName}}</h4> 
@@ -56,9 +58,26 @@
                     </tr>
                     <tr>
                         {{range $index := iterate $dim}}
-                        <td class="text-center">
-                            <input type="checkbox">
-                        </td>
+                            <td class="text-center">
+
+                                {{if gt (index $reservations (printf "%s-%s-%d" $currYear $currMonth (add $index 1))) 0 }}
+                                    <a href="/admin/reservations/cal/{{index $reservations (printf "%s-%s-%d" $currYear $currMonth (add $index 1))}}">
+                                        <span class="text-danger">R</span>
+                                    </a>
+                                {{else}}
+
+                                <input 
+                                    {{if gt (index $blocks (printf "%s-%s-%d" $currYear $currMonth (add $index 1))) 0 }}
+                                        name="remove_block_{{$roomID}}_{{printf "%s-%s-%d" $currYear $currMonth (add $index 1)}}"
+                                        value="{{index $blocks (printf "%s-%s-%d" $currYear $currMonth (add $index 1))}}"
+                                        checked
+                                    {{else}}
+                                        name="add_block_{{$roomID}}_{{printf "%s-%s-%d" $currYear $currMonth (add $index 1)}}"
+                                    {{end}}
+                                
+                                type="checkbox">
+                                {{end}}
+                            </td>
                         {{end}}
                     </tr>
                 </table>
