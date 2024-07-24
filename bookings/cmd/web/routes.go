@@ -43,7 +43,7 @@ func routes(App *config.AppConfig) http.Handler {
 
 	mux.Route("/admin", func(mux chi.Router) {
 		// mux.Use(Auth) is used for login, disabled till the completion of the project
-		// mux.Use(Auth)
+		mux.Use(Auth)
 
 		mux.Get("/dashboard", handlers.Repo.AdminDashboard)
 

@@ -27,3 +27,9 @@ for table in admin pack
 
 https://github.com/fiduswriter/Simple-DataTables
 ////////////////////////////////////////////////////////////////////////////////
+
+
+TO LOGIN VIA AUTH
+
+email : 	dev@gmail.com
+password : 	password
