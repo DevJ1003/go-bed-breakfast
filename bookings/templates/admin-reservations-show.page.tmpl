@@ -26,6 +26,8 @@
 
         <form action="/admin/reservations/{{$src}}/{{$res.ID}}" method="post">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <input type="hidden" name="year" value="{{index .StringMap "year"}}">
+                <input type="hidden" name="month" value="{{index .StringMap "month"}}">
 
                         <div class="col">
                             <div class="form-group">
@@ -81,7 +83,9 @@
                             {{else}}
                                 <a href="/admin/reservations-{{$src}}" class="btn btn-warning">Cancel</a>
                             {{end}}
-                            <a href="/admin/process-reservation/{{$src}}/{{$res.ID}}" class="btn btn-info">Mark as Processed</a>
+                            {{if eq $res.Processed 0}}
+                            <a href="/admin/process-reservation/{{$src}}/{{$res.ID}}/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}" class="btn btn-info">Mark as Processed</a>
+                            {{end}}
                         </p>
                         </div>
                         

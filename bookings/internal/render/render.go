@@ -73,7 +73,6 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 	td = AddDefaultData(td, r)
 
 	err := parsedTemplate.Execute(w, td)
-
 	if err != nil {
 		fmt.Println("error parsing template:", err)
 		return

@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/devj1003/bookings/internal/models"
@@ -512,4 +513,39 @@ func (m *MysqlDBRepo) GetRestrictionsForRoomByDate(roomID int, start, end time.T
 	}
 
 	return restrictions, nil
+}
+
+// InsertBlockForRoom inserts a room restriction
+func (m *MysqlDBRepo) InsertBlockForRoom(id int, startDate time.Time) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	query := `INSERT INTO room_restrictions (start_date, end_date, room_id, restriction_id,
+				created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`
+
+	_, err := m.DB.ExecContext(ctx, query, startDate, startDate.AddDate(0, 0, 1), id, 2, time.Now(), time.Now())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+// DeleteBlockByRoom deletes a room restriction
+func (m *MysqlDBRepo) DeleteBlockByRoom(id int) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	query := `DELETE FROM room_restrictions WHERE id = ?`
+
+	_, err := m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
