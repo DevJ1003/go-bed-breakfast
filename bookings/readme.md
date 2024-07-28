@@ -11,3 +11,4 @@ This is the repository for my bookings and reservation project.
 Additional Info -
 - Uses MySQL database (workbench)
 - Uses MailHog for sending mails
+- Contains database '.sql' file to import database structure
