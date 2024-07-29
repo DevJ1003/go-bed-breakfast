@@ -664,7 +664,7 @@ func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Re
 func (m *Repository) AdminProcessReservations(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
-	src := chi.URLParam(r, "src")
+	// src := chi.URLParam(r, "src")
 	err := Repo.DB.UpdateProcessedForReservation(1, id)
 	if err != nil {
 		log.Println(err)
@@ -675,7 +675,7 @@ func (m *Repository) AdminProcessReservations(w http.ResponseWriter, r *http.Req
 
 	Repo.App.Session.Put(r.Context(), "flash", "marked as processed")
 	if year == "" {
-		http.Redirect(w, r, fmt.Sprintf("/admin/reservations/%s", src), http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/reservations-calendar", http.StatusSeeOther)
 	} else {
 		http.Redirect(w, r, fmt.Sprintf("/admin/reservations-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
 	}
@@ -685,7 +685,7 @@ func (m *Repository) AdminProcessReservations(w http.ResponseWriter, r *http.Req
 func (m *Repository) AdminDeleteReservations(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
-	src := chi.URLParam(r, "src")
+	// src := chi.URLParam(r, "src")
 	_ = Repo.DB.DeleteReservation(id)
 
 	year := r.URL.Query().Get("y")
@@ -693,7 +693,7 @@ func (m *Repository) AdminDeleteReservations(w http.ResponseWriter, r *http.Requ
 
 	Repo.App.Session.Put(r.Context(), "success", "deleted!")
 	if year == "" {
-		http.Redirect(w, r, fmt.Sprintf("/admin/reservations/%s", src), http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/reservations-calendar", http.StatusSeeOther)
 	} else {
 		http.Redirect(w, r, fmt.Sprintf("/admin/reservations-calendar?y=%s&m=%s", year, month), http.StatusSeeOther)
 	}

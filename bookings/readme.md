@@ -12,3 +12,6 @@ Additional Info -
 - Uses MySQL database (workbench)
 - Uses MailHog for sending mails
 - Contains database '.sql' file to import database structure
+
+
+- This project is completed on 29-07-2024.
