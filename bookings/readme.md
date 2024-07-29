@@ -14,4 +14,4 @@ Additional Info -
 - Contains database '.sql' file to import database structure
 
 
-- This project is completed on 29-07-2024.
+- This project is completed on 29-07-2024
